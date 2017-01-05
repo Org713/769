@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4352AECF-CD5B-4823-91D9-38B3082A4BC9}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>data_ntx_nrx</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\data_dlcpump\data_dlctxpump.h" />
+    <ClInclude Include="src\data_dlcrxfilter\data_dlc_rxfilter.h" />
+    <ClInclude Include="src\data_net\data_nrx.h" />
+    <ClInclude Include="src\data_net\data_ntx.h" />
+    <ClInclude Include="src\data_rly\data_rly_tx.h" />
+    <ClInclude Include="src\data_rly\rly_jam.h" />
+    <ClInclude Include="src\entity\entity.h" />
+    <ClInclude Include="src\interface\data_interface_rx.h" />
+    <ClInclude Include="src\interface\data_interface_tx.h" />
+    <ClInclude Include="src\interrupt_handler_test\interrupt_handler.h" />
+    <ClInclude Include="src\mib\mib.h" />
+    <ClInclude Include="src\rt\rt_ctrl.h" />
+    <ClInclude Include="src\rt\rt_find.h" />
+    <ClInclude Include="src\sdl\sdl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\data_dlcpump\data_dlctxpump.c" />
+    <ClCompile Include="src\data_dlcrxfilter\data_dlc_rxfilter.c" />
+    <ClCompile Include="src\data_net\data_nrx.c" />
+    <ClCompile Include="src\data_net\data_ntx.c" />
+    <ClCompile Include="src\data_rly\data_rly_tx.c" />
+    <ClCompile Include="src\data_rly\rly_jam.c" />
+    <ClCompile Include="src\entity\entity.c" />
+    <ClCompile Include="src\interface\data_interface_rx.c" />
+    <ClCompile Include="src\interface\data_interface_tx.c" />
+    <ClCompile Include="src\interrupt_handler_test\interrupt_handler.c" />
+    <ClCompile Include="src\main.c" />
+    <ClCompile Include="src\mib\mib.c" />
+    <ClCompile Include="src\rt\rt_ctrl.c" />
+    <ClCompile Include="src\rt\rt_find.c" />
+    <ClCompile Include="src\sdl\sdl.c" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
