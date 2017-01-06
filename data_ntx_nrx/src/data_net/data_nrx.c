@@ -37,7 +37,7 @@ static int DataNrxInd(Signal *sig)
 				((T_Data_Interface_Rx_Ind_Param*)sig->param)->data = ((Net_Pkt*)param->net_pkt)->net_payload;
 				((T_Data_Interface_Rx_Ind_Param*)sig->param)->len = ((Net_Pkt*)param->net_pkt)->len;//数据长度,不是包长度
 				((T_Data_Interface_Rx_Ind_Param*)sig->param)->pri = ((Net_Pkt*)param->net_pkt)->pri;
-				((T_Data_Interface_Rx_Ind_Param*)sig->param)->sa = ((Net_Pkt*)param->net_pkt)->sa;//??param->sa
+				((T_Data_Interface_Rx_Ind_Param*)sig->param)->sa = ((Net_Pkt*)param->net_pkt)->sa;//param->sa??
 				((T_Data_Interface_Rx_Ind_Param*)sig->param)->svc_type = ((Net_Pkt*)param->net_pkt)->svc_type;
 				AddSignal(sig);
 			}
@@ -65,7 +65,7 @@ static int DataNrxInd(Signal *sig)
 		{
 			if (proc->broadcast_pkt_sn != receive_pkt_sn)//没收到过
 			{
-				sig = proc->data_rly_rx_ind;
+				sig = proc->data_rly_rx_ind;//本地没有收到过的广播包也要中继的
 				((T_Data_Rly_Rx_Ind_Param*)sig->param)->net_pkt = param->net_pkt;
 				((T_Data_Rly_Rx_Ind_Param*)sig->param)->len = param->len;//包的长度
 				((T_Data_Rly_Rx_Ind_Param*)sig->param)->pri = ((Net_Pkt*)param->net_pkt)->pri;
@@ -75,7 +75,7 @@ static int DataNrxInd(Signal *sig)
 				((T_Data_Interface_Rx_Ind_Param*)sig->param)->data = ((Net_Pkt*)param->net_pkt)->net_payload;
 				((T_Data_Interface_Rx_Ind_Param*)sig->param)->len = ((Net_Pkt*)param->net_pkt)->len;//数据长度,不是包长度
 				((T_Data_Interface_Rx_Ind_Param*)sig->param)->pri = ((Net_Pkt*)param->net_pkt)->pri;
-				((T_Data_Interface_Rx_Ind_Param*)sig->param)->sa = ((Net_Pkt*)param->net_pkt)->sa;//??param->sa
+				((T_Data_Interface_Rx_Ind_Param*)sig->param)->sa = ((Net_Pkt*)param->net_pkt)->sa;//param->sa??
 				((T_Data_Interface_Rx_Ind_Param*)sig->param)->svc_type = ((Net_Pkt*)param->net_pkt)->svc_type;
 				AddSignal(sig);
 			}
@@ -92,7 +92,7 @@ static int DataNrxInd(Signal *sig)
 				((T_Data_Interface_Rx_Ind_Param*)sig->param)->data = ((Net_Pkt*)param->net_pkt)->net_payload;
 				((T_Data_Interface_Rx_Ind_Param*)sig->param)->len = ((Net_Pkt*)param->net_pkt)->len;//数据长度,不是包长度
 				((T_Data_Interface_Rx_Ind_Param*)sig->param)->pri = ((Net_Pkt*)param->net_pkt)->pri;
-				((T_Data_Interface_Rx_Ind_Param*)sig->param)->sa = ((Net_Pkt*)param->net_pkt)->sa;//??param->sa
+				((T_Data_Interface_Rx_Ind_Param*)sig->param)->sa = ((Net_Pkt*)param->net_pkt)->sa;//param->sa??
 				((T_Data_Interface_Rx_Ind_Param*)sig->param)->svc_type = ((Net_Pkt*)param->net_pkt)->svc_type;
 				AddSignal(sig);
 			}
@@ -109,6 +109,10 @@ static int DataNrxInd(Signal *sig)
 void DataNrxInit(Data_Nrx* proc)
 {
 	proc->state = IDLE;
+	proc->unicast_pkt_sn = 0xff;		//单播  unicast
+	proc->rly_unicast_pkt_sn = 0xff;	//其他目的节点单播 rly_unicast
+	proc->broadcast_pkt_sn = 0xff;	//广播  broadcast
+	proc->multicast_pkt_sn = 0xff;	//组播  multicast
 }
 
 void DataNrxSetup(Data_Nrx* proc)
@@ -126,7 +130,7 @@ void DataNrxSetup(Data_Nrx* proc)
 	sig = &proc->data_nrx_ind;
 	sig->next = 0;
 	sig->src = 0;
-	sig->dst = 0;
+	sig->dst = proc;
 	sig->func = DataNrxInd;
 	sig->pri = SDL_PRI_NORM;
 	sig->param = &proc->data_nrx_ind_param;

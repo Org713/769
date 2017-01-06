@@ -36,7 +36,8 @@ int RdRlyQue(Data_Rly_Tx* proc,unsigned short **net_pkt,unsigned short *da, unsi
 		btm = proc->rly_que_list.btm;
 		*net_pkt		= (unsigned short*)&proc->rly_que_list.que_elmt[btm].net_pkt;
 		*da			= proc->rly_que_list.que_elmt[btm].net_pkt.da;
-		*len		= proc->rly_que_list.que_elmt[btm].net_pkt.len;
+		//*len		= proc->rly_que_list.que_elmt[btm].net_pkt.len;
+		*len		= sizeof(proc->rly_que_list.que_elmt[btm].net_pkt);//包的长度，不是包中数据的长度
 		*pri		= proc->rly_que_list.que_elmt[btm].net_pkt.pri;
 		return 1;
 	}
@@ -122,13 +123,13 @@ static int DataRlyTxCfm(Signal* sig)
 							sig = proc->data_rly_tx_jam_ind;
 							((T_Data_Rly_Tx_Jam_Ind_Param*)sig->param)->jam_flag = 0;
 							AddSignal(sig);
-							proc->jam_flag = 0;//拥塞解除指示 置位
+							proc->jam_flag = 0;//拥塞解除
 							return 0;
 						}
 					}
 					else
 					{
-						return 0;//????
+						return 0;//不小于最低存储空间
 					}
 				}
 			}
@@ -137,7 +138,7 @@ static int DataRlyTxCfm(Signal* sig)
 		}
 		else    //上一包 发送失败了
 		{
-
+			//中继网络包发送失败，在网络层不再重新发送
 		}
 	}
 	return 0;
@@ -152,7 +153,8 @@ static int DataRlyRxInd(Signal *sig)
 	unsigned short 	da;
 	unsigned short  pri;
 	unsigned short	*temp_net_pkt;//取网络包时暂时存放
-	unsigned short	len;
+	unsigned short	len;//包的长度
+
 	if (proc->state == IDLE)
 	{
 		//放到中继队列中，并给该包设置ttl值；
@@ -167,7 +169,15 @@ static int DataRlyRxInd(Signal *sig)
 		{
 			printf("取中继队列\n");
 		}
-		sig = proc->data_rly_tx_req[pri][da];
+		if (MAX_NODE_CNT < da) //广播or组播
+		{
+			da = proc->mib->local_id;	//2017.1.6
+			sig = proc->data_rly_tx_req[pri][da];
+		}
+		else  //单播
+		{
+			sig = proc->data_rly_tx_req[pri][da];
+		}
 		((T_Data_Rly_Tx_Req_Param*)sig->param)->net_pkt = temp_net_pkt;
 		((T_Data_Rly_Tx_Req_Param*)sig->param)->da = da;
 		((T_Data_Rly_Tx_Req_Param*)sig->param)->len = len;
@@ -204,7 +214,6 @@ static int DataRlyRxInd(Signal *sig)
 			return 0;
 		}
 	}
-	
 	return 0;
 }
 

@@ -8,22 +8,17 @@ static int DlcTxpumpTxReq(Signal* sig)
 
 	unsigned short data_pri_id,module_id,cfm_nsn;
 	/***************************test begin************************/
-	unsigned short test_svc_type;//data_type
-	unsigned short test_pkt_sn;
-	unsigned short test_da;
-	unsigned short test_sa;
+
+	unsigned short test_ra;
 	unsigned short test_pri;
-	unsigned short test_len;
+	unsigned short test_pkt_len;
 	unsigned short test_net_payload[NET_PAYLOAD_SIZE_TEST];//¾»ºÉ  750
 
 	memset(test_net_payload, 0, NET_PAYLOAD_SIZE_TEST);
-	test_svc_type = ((Net_Pkt*)param->net_pkt)->svc_type;
-	test_pkt_sn = ((Net_Pkt*)param->net_pkt)->pkt_sn;
-	test_da = ((Net_Pkt*)param->net_pkt)->da;
-	test_sa = ((Net_Pkt*)param->net_pkt)->sa;
-	test_pri = ((Net_Pkt*)param->net_pkt)->pri;
-	test_len = ((Net_Pkt*)param->net_pkt)->len;
-	memcpy(test_net_payload, ((Net_Pkt*)param->net_pkt)->net_payload, test_len);
+	test_ra = param->ra;
+	test_pri = param->pri;
+	test_pkt_len = param->len;
+	memcpy(test_net_payload, ((Net_Pkt*)param->net_pkt)->net_payload,((Net_Pkt*)param->net_pkt)->len);
 
 	/***************************test end************************/
 

@@ -1,26 +1,15 @@
-﻿生成启动时间为 2017/1/5 10:18:26。
-     1>项目“E:\zhaoshanboEpan\769\shanbozh\data_ntx_nrx\data_ntx_nrx\data_ntx_nrx.vcxproj”在节点 2 上(Rebuild 个目标)。
+﻿生成启动时间为 2017/1/6 16:17:23。
+     1>项目“E:\zhaoshanboEpan\769\shanbozh\data_ntx_nrx\data_ntx_nrx\data_ntx_nrx.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
-         D:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt src\data_dlcpump\data_dlctxpump.c src\data_net\data_nrx.c src\data_net\data_ntx.c src\data_rly\data_rly_tx.c src\entity\entity.c src\interface\data_interface_rx.c src\interface\data_interface_tx.c src\interrupt_handler_test\interrupt_handler.c src\main.c src\mib\mib.c src\rt\rt_ctrl.c src\rt\rt_find.c src\sdl\sdl.c
-         sdl.c
-         rt_find.c
-         rt_ctrl.c
-         mib.c
-         main.c
-         interrupt_handler.c
-         data_interface_tx.c
-         data_interface_rx.c
-         entity.c
-         data_rly_tx.c
-         data_ntx.c
-         data_nrx.c
+         D:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt src\data_dlcpump\data_dlctxpump.c
          data_dlctxpump.c
-         正在生成代码...
        Link:
          D:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\zhaoshanboEpan\769\shanbozh\data_ntx_nrx\Debug\data_ntx_nrx.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:\zhaoshanboEpan\769\shanbozh\data_ntx_nrx\Debug\data_ntx_nrx.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\zhaoshanboEpan\769\shanbozh\data_ntx_nrx\Debug\data_ntx_nrx.lib" /MACHINE:X86 Debug\data_dlctxpump.obj
+         Debug\data_dlc_rxfilter.obj
          Debug\data_nrx.obj
          Debug\data_ntx.obj
          Debug\data_rly_tx.obj
+         Debug\rly_jam.obj
          Debug\entity.obj
          Debug\data_interface_rx.obj
          Debug\data_interface_tx.obj
@@ -31,8 +20,8 @@
          Debug\rt_find.obj
          Debug\sdl.obj
          data_ntx_nrx.vcxproj -> E:\zhaoshanboEpan\769\shanbozh\data_ntx_nrx\Debug\data_ntx_nrx.exe
-     1>已完成生成项目“E:\zhaoshanboEpan\769\shanbozh\data_ntx_nrx\data_ntx_nrx\data_ntx_nrx.vcxproj”(Rebuild 个目标)的操作。
+     1>已完成生成项目“E:\zhaoshanboEpan\769\shanbozh\data_ntx_nrx\data_ntx_nrx\data_ntx_nrx.vcxproj”(Build 个目标)的操作。
 
 生成成功。
 
-已用时间 00:00:00.54
+已用时间 00:00:00.25

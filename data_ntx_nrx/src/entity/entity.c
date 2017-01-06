@@ -76,6 +76,9 @@ void EntitySetup(Entity* ent)
 
 			ent->data_dlc_rxfilter.data_nrx_ind[i][j] = &ent->data_nrx[i][j].data_nrx_ind;//2017.1.5
 			ent->data_rly_tx.data_rly_tx_jam_ind = &ent->rly_jam.data_rly_tx_jam_ind;
+
+			ent->data_nrx[i][j].data_rly_rx_ind = &ent->data_rly_tx.data_rly_rx_ind;//2017.1.6
+
 		}
 	}
 }

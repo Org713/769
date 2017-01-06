@@ -19,7 +19,9 @@ typedef struct _data_dlc_rxfilter
 	Mib *mib;
 	u8 state;
 
+	Net_Pkt test_net_pkt;
 	/***************sig received*****************/
+	Signal  test_ind;
 
 	/***************sig to send*****************/
 	Signal*	data_nrx_ind[DATA_PRI_NUM][MAX_NODE_CNT];

@@ -74,7 +74,8 @@ int RdNetQue(Data_Ntx* proc,unsigned short **net_pkt,unsigned short *da, unsigne
 		btm = proc->net_que_list.btm;
 		*net_pkt		= (unsigned short*)&proc->net_que_list.que_elmt[btm].net_pkt;
 		*da			= proc->net_que_list.que_elmt[btm].net_pkt.da;
-		*len		= proc->net_que_list.que_elmt[btm].net_pkt.len;
+		//*len		= proc->net_que_list.que_elmt[btm].net_pkt.len;//包中数据的长度
+		*len		= sizeof(proc->net_que_list.que_elmt[btm].net_pkt);//网络包的长度
 		*pri		= proc->net_que_list.que_elmt[btm].net_pkt.pri;
 		*pkt_type	= proc->net_que_list.que_elmt[btm].pkt_type;
 		return 1;
@@ -220,16 +221,78 @@ static int DataRlyTxReq(Signal *sig)
 	Data_Ntx *proc = (Data_Ntx*)sig->dst;
 	Data_Rly_Tx_Req_Param *param = (Data_Rly_Tx_Req_Param*)sig->param;
 	
+	unsigned short isSucc_flag;
+	unsigned short pri;
+	unsigned short da;
+	unsigned short len;
+	Net_Pkt net_pkt;//组网络包
+	unsigned short *temp_net_pkt;//取网络包时暂时存放
+	unsigned short pkt_type;
+
+	printf("Data_Ntx[%d]::DataRlyTxReq()收到req,\n",proc->module_id);
+
 	if (proc->state != IDLE)
 	{
-		if (WtNetQue(proc, (Net_Pkt*)param->net_pkt, 0))
+		isSucc_flag = WtNetQue(proc, (Net_Pkt*)param->net_pkt, 0);//中继包0
+		if (isSucc_flag)
 		{
 			printf("已经放进队列中\n");
 		}
 	}
 	else if (proc->state == IDLE)
 	{
-		//与上面的DataInterfaceTxReq()雷同，待测试后添加
+		//组网络包
+		//WtNetPkt(proc, &net_pkt, param);
+		//放到待发送队列中，标记为中继网络包，并设置ttl值
+		isSucc_flag = WtNetQue(proc, (Net_Pkt*)param->net_pkt, 0);
+		if (isSucc_flag)
+		{
+			printf("已经放进队列中\n");
+		}
+		//读取 队列中的网络包   
+		isSucc_flag = RdNetQue(proc, &temp_net_pkt, &da, &len, &pri, &pkt_type);
+		if(isSucc_flag)
+		{
+			printf("取中继网络包\n");
+		}
+		//本地保存这几个变量，等着后面使用：中继、等待cfm
+		proc->net_pkt = temp_net_pkt;
+		proc->len = len;
+		proc->pri = pri;
+		proc->da = da;
+		proc->pkt_type = pkt_type;
+
+		if  ((MAX_NODE_CNT > da)&&(da >= 0))	//单播
+		{
+			//初始化路由变量
+			memset(proc->fail_ra, 0xff, sizeof(proc->fail_ra));
+			proc->retry_cnt = 0;
+
+			sig = proc->data_ntx_rt_req; //路由查询
+			((T_Data_Ntx_Rt_Req_Param*)sig->param)->da = da;
+			memcpy(((T_Data_Ntx_Rt_Req_Param*)sig->param)->fail_ra, proc->fail_ra, sizeof(proc->fail_ra));
+			((T_Data_Ntx_Rt_Req_Param*)sig->param)->local_data_pri_id = proc->data_pri_id;// 为了路由cfm找到本data_ntx[?][da]
+
+			AddSignal(sig);
+			
+			proc->state = WAIT_RT_CFM;
+		}
+		else    //非单播
+		{
+			proc->ra = 0xff;
+			sig = proc->dlc_txpump_tx_req;
+			((T_Dlc_Txpump_Tx_Req_Param*)sig->param)->net_pkt		= (unsigned short*)proc->net_pkt;
+			((T_Dlc_Txpump_Tx_Req_Param*)sig->param)->len			= proc->len;
+			((T_Dlc_Txpump_Tx_Req_Param*)sig->param)->ra				= proc->ra;
+			((T_Dlc_Txpump_Tx_Req_Param*)sig->param)->pri			= proc->pri;
+			((T_Dlc_Txpump_Tx_Req_Param*)sig->param)->data_pri_id	= proc->data_pri_id;
+			((T_Dlc_Txpump_Tx_Req_Param*)sig->param)->module_id		= proc->module_id;
+
+			AddSignal(sig);
+			proc->wait_cfm_nsn = ((Net_Pkt*)proc->net_pkt)->pkt_sn;//等待cfm的网络包序号
+			SetTimer(&proc->tx_req_timer,3);//定时器时间？？？？
+			proc->state = WAIT_TX_CFM;
+		}
 	}
 	
 	return 0;
@@ -280,10 +343,13 @@ static int DataNtxRtFindCfm(Signal *sig)
 		{
 			proc->ra = param->ra;//保存ra
 			sig = proc->dlc_txpump_tx_req;
-			((T_Dlc_Txpump_Tx_Req_Param*)sig->param)->net_pkt	= (unsigned short*)proc->net_pkt;
-			((T_Dlc_Txpump_Tx_Req_Param*)sig->param)->len		= proc->len;
-			((T_Dlc_Txpump_Tx_Req_Param*)sig->param)->ra			= proc->ra;
-			((T_Dlc_Txpump_Tx_Req_Param*)sig->param)->pri		= proc->pri;
+			((T_Dlc_Txpump_Tx_Req_Param*)sig->param)->net_pkt		= (unsigned short*)proc->net_pkt;
+			((T_Dlc_Txpump_Tx_Req_Param*)sig->param)->len			= proc->len;
+			((T_Dlc_Txpump_Tx_Req_Param*)sig->param)->ra				= proc->ra;
+			((T_Dlc_Txpump_Tx_Req_Param*)sig->param)->pri			= proc->pri;
+			((T_Dlc_Txpump_Tx_Req_Param*)sig->param)->data_pri_id	= proc->data_pri_id;
+			((T_Dlc_Txpump_Tx_Req_Param*)sig->param)->module_id		= proc->module_id;
+
 			AddSignal(sig);
 			proc->wait_cfm_nsn = ((Net_Pkt*)proc->net_pkt)->pkt_sn;//等待cfm的网络包序号
 			SetTimer(&proc->tx_req_timer,3);//定时器时间？？？？

@@ -31,15 +31,13 @@ int main(void)
 		
 		if (systime == 2)
 		{
-			sig = &ent_test[0].interrupt_handler.test_ind;
-			/*((Test_Ind_Param*)sig->param)->svc_type = 1;
-			((Test_Ind_Param*)sig->param)->pkt_sn = 1;
-			((Test_Ind_Param*)sig->param)->pri = 1;
-			((Test_Ind_Param*)sig->param)->da = 2;
-			((Test_Ind_Param*)sig->param)->len = sizeof(tx_data_0);
-			((Test_Ind_Param*)sig->param)->data = tx_data_0;*/
-			sig->func(sig);
+			//测试接口
+			//sig = &ent_test[0].interrupt_handler.test_ind;
+			//sig->func(sig);
 
+			//测试收数据
+			sig = &ent_test[0].data_dlc_rxfilter.test_ind;
+			sig->func(sig);
 		}
 
 
